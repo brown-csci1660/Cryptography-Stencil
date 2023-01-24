@@ -1,2 +1,2 @@
-# Cryptography-Stencil
+# cryptography-stencil
 Stencil for Cryptography project
