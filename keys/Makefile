@@ -5,4 +5,7 @@ setup:
 	./generate-pairs > pairs
 
 build:
-	go build
+
+
+clean: 
+	rm -rf sol

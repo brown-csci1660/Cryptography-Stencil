@@ -5,4 +5,3 @@ setup:
 	./generate-encrypted-grade > database
 
 build:
-	chmod +x sol
