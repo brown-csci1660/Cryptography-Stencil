@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+from sys import argv
+
+if len(argv) != 2:
+    print("Usage: ./sol <path-to-string>\n")
+    exit(1)
+
+path = argv[1]
+
+# call this on your answer to print in the specified format
+# you might need to modify this slightly depending on what you
+# pass in for a, b, c, n
+def print_answer(total_blocks, a, b, c, n,
+                 famous_a_count, famous_b_count,
+                 famous_c_count, famous_n_count):
+        print("Total blocks:", total_blocks)
+        print("A cipher hex:", a.hex())
+        print("B cipher hex:", b.hex())
+        print("C cipher hex:", c.hex())
+        print("N cipher hex:", n.hex())
+        print("Famous student As", famous_a_count)
+        print("Famous student Bs", famous_b_count)
+        print("Famous student Cs", famous_c_count)
+        print("Famous student Ns", famous_n_count)
