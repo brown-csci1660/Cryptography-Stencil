@@ -2,13 +2,32 @@
 
 from sys import argv
 
-if len(argv) != 2:
-    print("Usage: ./sol <path-to-string>\n")
-    exit(1)
+BLOCK_SIZE_BYTES = 8
 
-path = argv[1]
+def main(input_args):
 
-# call this on your answer to print in the specified format
+    if len(input_args) != 1:
+        print("Usage: ./sol <path-to-database>\n")
+        exit(1)
+
+    db_path = input_args[0]
+
+
+    with open(db_path, "rb") as fp:
+        while True:
+            block = fp.read(BLOCK_SIZE_BYTES)
+            if (not block) or (block == 0):
+                break
+
+            # TODO:  process each block
+
+    # TODO:  Perhaps do some more computation, then
+    # print out answers for the required questions, using the
+    # format specified in the assignment
+    # print_answer(...)
+
+
+# Call this on your answer to print in the specified format
 # you might need to modify this slightly depending on what you
 # pass in for a, b, c, n
 def print_answer(total_blocks, a, b, c, n,
@@ -23,3 +42,7 @@ def print_answer(total_blocks, a, b, c, n,
         print("Famous student Bs", famous_b_count)
         print("Famous student Cs", famous_c_count)
         print("Famous student Ns", famous_n_count)
+
+
+if __name__ == "__main__":
+    main(argv[1:])
