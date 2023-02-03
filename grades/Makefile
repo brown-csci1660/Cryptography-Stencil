@@ -1,7 +1,7 @@
 all: setup build
 
 setup:
-	chmod +x generate-encrypted-grade
-	./generate-encrypted-grade > database
+	chmod +x generate-database
+	./generate-database > database
 
 build:
