@@ -99,4 +99,12 @@ func main() {
 	firstCiphertext := hexStringToBytes(firstResponse[5:21])
 	fmt.Printf("First IV:  %x, First c:  %x\n", firstIv, firstCiphertext)
 
+	// TODO: When done, print the recovered key
+
+	// When you have determined the key, print it to stdout as an
+	// 8-byte hex string (eg. ababababcdcdcdcd), followed by a
+	// newline.  This should be your program's last line of
+	// output.  Here's an example:
+	// someKey := hexStringToBytes("ababababcdcdcdcd") // Get some byte array
+	// fmt.Printf("%x\n", someKey) // Print it as specified
 }

@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+
+import sys
+import time
+import socket
+# TODO: Add other imports here if necessary.
+
+class PaddingServer:
+    # NOTE: You do not need to modify this function.
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # NOTE: You do not need to modify this function.
+    def connect(self):
+        try:
+            self.sock.connect((self.host, self.port))
+        except Exception as e:
+            print("could not connect to server at " + str(self.host) + ":" + \
+                str(self.port) + " - " + str(e))
+
+    # NOTE: You do not need to modify this function.
+    def close(self):
+        self.sock.close()
+
+    # NOTE:  You should not need to modify this function, but you can
+    # if you feel it's necessary
+    def send(self, msg):
+        # Send the message msg over the socket
+        self.sock.send(msg + b'\n') # All commands terminated with newline
+
+    # NOTE:  You should not need to modify this function, but you can
+    # if you feel it's necessary
+    def recv(self):
+        # Read data from the server (up to 1024 bytes)
+        time.sleep(0.001)
+        return self.sock.recv(1024)
+
+
+def send_command(host, port, cmd):
+    p = PaddingServer(host, port)
+    p.connect()
+
+    # TODO: Implement an attack on the server that takes advantage of the
+    # padding leak to send the command in `cmd` to the server using
+    # `p.send` and `p.recv`.
+
+    p.close()
+
+# NOTE: You do not need to modify this function.
+def main():
+    if len(sys.argv) != 4:
+        print("Usage: ./sol <host> <port> <command>")
+        sys.exit(1)
+
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+    command_to_run = sys.argv[3]
+
+    send_command(host, port, command_to_run)
+
+# Run the script:
+if __name__ == "__main__":
+    main()

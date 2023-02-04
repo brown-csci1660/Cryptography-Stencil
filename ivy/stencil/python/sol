@@ -59,6 +59,14 @@ def main(args):
     print("First IV:  {}, First ciphertext:  {}"
           .format(first_iv.hex(), first_ciphertext.hex()))
 
+    # TODO: When done, print the recovered key
+    # When you have determined the key, print it to stdout as an
+    # 8-byte hex string (eg. ababababcdcdcdcd), followed by a
+    # newline.  This should be your program's last line of
+    # output.  Here's an example:
+    # some_key = bytes.fromhex("ababababcdcdcdcd")
+    # print(some_key.hex())
+
 
 def check_test_key(key):
     try:
