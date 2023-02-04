@@ -9,6 +9,18 @@ directory.  Additionally, we have provided a `Makefile` and run script
 (`sol`) to assist with compiling and running your code, which are
 described below.  
 
+If you encounter issues with any part of this process, please let us
+know!  
+
+## Initial setup
+
+If you are using the course container environment, you need to install
+Java before using this stencil.  To install Java, open a terminal
+inside the container and run the following:
+```
+cs1660-user@786309b8f8ed:~ sudo apt install openjdk-19-jdk-headless
+```
+
 ## Compiling your code
 
 Most users develop for Java in an IDE, which compiles your code
