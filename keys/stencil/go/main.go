@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	// This module provides the encrypt/decrypt functions
+	// used for the cipher in this problem
 )
 
 type pair struct {
@@ -15,13 +17,29 @@ type pair struct {
 }
 
 func main() {
-	pairs := parsePairs()
+	if len(os.Args) != 2 {
+		fmt.Printf("%v <pairs file>\n", os.Args[0])
+		os.Exit(1)
+	}
+
+	pairsFile := os.Args[1]
+
+	pairs := parsePairs(pairsFile)
 	if len(pairs) == 0 {
 		fmt.Fprintf(os.Stderr, "need at least one plaintext/ciphertext pair\n")
 		os.Exit(1)
 	}
 
 	// TODO: Implement your attack here
+
+	// Note:  you have access to the encrypt/decrypt algorithm
+	// for the cipher in this problem.  To use:
+	// c := cipher.Encrypt(...)
+	// p := cipher.Decrypt(...)
+	//         or
+	// c := cipher.DoubleEncrypt(...)
+	// p := cipher.DoubleDecrypt(...)
+	// see ./pkg/cipher/cipher.go for details.
 
 	printKeyPair(0, 0)
 }
@@ -38,9 +56,17 @@ func printKeyPair(k1, k2 uint32) {
 // <plaintext> <ciphertext>
 // from stdin. If it encounters an error,
 // it prints the error and exits.
-func parsePairs() []pair {
+func parsePairs(pairsFile string) []pair {
 	var pairs []pair
-	s := bufio.NewScanner(os.Stdin)
+
+	fd, err := os.Open(pairsFile)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error opening pairs file: %v\n", err)
+		os.Exit(1)
+	}
+	defer fd.Close()
+
+	s := bufio.NewScanner(fd)
 	for s.Scan() {
 		parts := strings.Fields(s.Text())
 		if len(parts) == 0 {
