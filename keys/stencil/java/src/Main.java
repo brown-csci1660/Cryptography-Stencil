@@ -1,11 +1,18 @@
+package src;
+
+import java.io.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Main {
 	public static void main(String[] args) {
-		ArrayList<Pair> pairs = parsePairs();
+		if (args.length != 1) {
+			System.err.println("Args:  <pairs file>");
+			System.exit(1);
+		}
+
+		String inputFile = args[0];
+
+		ArrayList<Pair> pairs = parsePairs(inputFile);
 		if (pairs.isEmpty()) {
 			System.err.println("need at least one plaintext/ciphertext pair");
 			System.exit(1);
@@ -24,12 +31,18 @@ public class Main {
             + ")");
 	}
 
-	private static ArrayList<Pair> parsePairs() {
+	private static ArrayList<Pair> parsePairs(String inputFile) {
 		ArrayList<Pair> pairs = new ArrayList<Pair>();
+		FileReader fr;
+
+		try {
+			fr = new FileReader(inputFile);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 
 		try{
-			BufferedReader br =
-	                      new BufferedReader(new InputStreamReader(System.in));
+			BufferedReader br = new BufferedReader(fr);
 
 			String input;
 
@@ -70,9 +83,8 @@ public class Main {
 					System.exit(1);
 				}
 
-				Pair pair = new Pair(new ByteArrayWrapper(Arrays.copyOf(plaintext,
-                    			plaintext.length)), new ByteArrayWrapper(Arrays.copyOf(ciphertext,
-                    			ciphertext.length)));
+				Pair pair = new Pair(new ByteArrayWrapper(Arrays.copyOf(plaintext, plaintext.length)),
+									 new ByteArrayWrapper(Arrays.copyOf(ciphertext, ciphertext.length)));
 
 				pairs.add(pair);
 			}

@@ -1,0 +1,3 @@
+# Ignore java output directory
+out/
+stencil/java/out/
