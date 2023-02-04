@@ -34,10 +34,10 @@ def print_answer(total_blocks, a, b, c, n,
                  famous_a_count, famous_b_count,
                  famous_c_count, famous_n_count):
         print("Total blocks:", total_blocks)
-        print("A cipher hex:", a.hex())
-        print("B cipher hex:", b.hex())
-        print("C cipher hex:", c.hex())
-        print("N cipher hex:", n.hex())
+        print("Ciphertext for grade A:", a.hex())
+        print("Ciphertext for grade B:", b.hex())
+        print("Ciphertext for grade C:", c.hex())
+        print("Ciphertext for grade N:", n.hex())
         print("Famous student As", famous_a_count)
         print("Famous student Bs", famous_b_count)
         print("Famous student Cs", famous_c_count)
