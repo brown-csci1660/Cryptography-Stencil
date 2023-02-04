@@ -4,9 +4,10 @@ import sys
 import time
 import subprocess
 
+
 def main(args):
-    if len(args) != 1:
-        print("Usage: ./sol <path to ivy binary to attack>\n")
+    if not ((len(args) == 1) or (len(args) == 2)):
+        print("Usage: ./sol <path to ivy binary to attack> [test key]\n")
         exit(1)
 
     ivy_path = args[0]
@@ -15,7 +16,18 @@ def main(args):
     # the router binary as a subprocess--this allows us to
     # repeatedly send commands and read the output as if we were
     # entering input manually, just much faster.
-    ivy_process = subprocess.Popen(ivy_path,
+
+    # Build a list with the command to run the router
+    cmd = [
+        ivy_path,
+    ]
+
+    if len(args) == 2: # Add the test key as an argument, if specified
+        test_key = args[1]
+        check_test_key(test_key)
+        cmd.append(test_key)
+
+    ivy_process = subprocess.Popen(cmd,
                                    stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    encoding="utf-8")
@@ -46,6 +58,16 @@ def main(args):
 
     print("First IV:  {}, First ciphertext:  {}"
           .format(first_iv.hex(), first_ciphertext.hex()))
+
+
+def check_test_key(key):
+    try:
+        as_bytes = bytes.fromhex(key)
+
+        if len(as_bytes) != 8:
+            raise ValueError("Test key must be 8 bytes")
+    except Exception as e:
+        raise ValueError("Invalid test key format:  {}".format(str(e)))
 
 
 if __name__ == "__main__":

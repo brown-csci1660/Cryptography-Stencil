@@ -26,19 +26,33 @@ func hexStringToBytes(s string) []byte {
 	return bytes
 }
 
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Printf("%v <path to router binary to attack>\n", os.Args[0])
-		os.Exit(1)
+// Validate the test key before running the subprocess
+func checkTestKey(key string) {
+	b := hexStringToBytes(key)
+	if len(b) != 8 {
+		panic("Test key must be 8 bytes")
 	}
+}
 
+func main() {
 	// Idea: we can perform our attack automatically by running
 	// the router binary as a subprocess--this allows us to
 	// repeatedly send commands and read the output as if we were
 	// entering input manually, just much faster.
+	var ivyProcess *exec.Cmd
 
-	binPath := os.Args[1]
-	ivyProcess := exec.Command(binPath)
+	if len(os.Args) == 2 { // Normal operation
+		binPath := os.Args[1]
+		ivyProcess = exec.Command(binPath) // If test key was specified
+	} else if len(os.Args) == 3 {
+		binPath := os.Args[1]
+		testKey := os.Args[2]
+		checkTestKey(testKey)
+		ivyProcess = exec.Command(binPath, testKey)
+	} else {
+		fmt.Printf("%v <path to router binary to attack> [test key]\n", os.Args[0])
+		os.Exit(1)
+	}
 
 	// Set up a pipe to the router's stdin
 	ivyStdin, err := ivyProcess.StdinPipe()
