@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net"
 	"os"
@@ -35,18 +36,25 @@ func (p *PaddingServer) Close() {
 	p.sock.Close()
 }
 
+// NOTE: You should not need to modify this function, but you can
+// if you feel it's necessary
 func (p *PaddingServer) Send(msg string) {
-	// TODO: Use the socket (p.sock) to send the message in the `msg` variable
-	// over the wire.
-	//
-	// Example: fmt.Fprintf(g.sock, "message goes here\n")
+	// Send the message in the `msg` variable using the socket
+	_, err := fmt.Fprintf(p.sock, "%v\n", msg)
+	if err != nil {
+		return
+	}
 }
 
+// NOTE: You should not need to modify this function, but you can
+// if you feel it's necessary
 func (p *PaddingServer) Recv() (msg string) {
-	// TODO: Use the socket (p.sock) to read data from the wire. Assign the
-	// read data to the `msg` variable.
-	//
-	// Example: response, err := bufio.NewReader(g.sock).ReadString('\n')
+	// Read a line of text from the server using the socket
+	msg, err := bufio.NewReader(p.sock).ReadString('\n')
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error reading data from server:  %v\n", err)
+		os.Exit(1)
+	}
 
 	return msg
 }
@@ -55,9 +63,9 @@ func sendCommand(addr string, cmd string) {
 	p := NewPaddingServer(addr)
 	p.Connect()
 
-    // TODO: Implement an attack on the server that takes advantage of the
-    // padding leak to send the command in `cmd` to the server using
-    // `p.Send` and `p.Recv`.
+	// TODO: Implement an attack on the server that takes advantage of the
+	// padding leak to send the command in `cmd` to the server using
+	// `p.Send` and `p.Recv`.
 
 	p.Close()
 }
