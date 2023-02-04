@@ -1,6 +1,6 @@
 # Go stencil
 
-This folder contains python stencil code for the Cryptography
+This folder contains Go stencil code for the Cryptography
 project.  To use it, please copy the contents of this folder to the
 main directory for this problem (ie, `grades`, `ivy`, etc.).  
 

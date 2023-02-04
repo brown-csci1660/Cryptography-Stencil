@@ -6,7 +6,7 @@ import subprocess
 
 def main(args):
     if len(args) != 1:
-        print("Usage: ./sol.py <path to ivy binary to attack>\n")
+        print("Usage: ./sol <path to ivy binary to attack>\n")
         exit(1)
 
     ivy_path = args[0]

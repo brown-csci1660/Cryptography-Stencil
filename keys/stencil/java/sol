@@ -1,0 +1,11 @@
+#!/bin/bash
+# NOTE:  this file assumes that you have compiled
+# the java sources using the Makefile we have provided.
+#
+# If you alter the structure or the Makefile, you'll likely
+# need to alter this as well!
+
+
+# The -Xmx4g flag is used to increase the size of the Java heap, which
+# may be too small depending on how you're working on the solution.
+java -Xmx4g -cp out/ src.Main $@
