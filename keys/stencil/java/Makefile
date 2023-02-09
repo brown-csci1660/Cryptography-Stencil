@@ -3,7 +3,7 @@ JAVAC := javac
 
 OUT_DIR := out
 
-SOURCES=$(shell find . -name '*.java')
+SOURCES=$(shell find . -name '*.java' -not -path "./stencil/*")
 
 all: build
 
