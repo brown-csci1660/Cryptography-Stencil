@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
 	// This module provides the encrypt/decrypt functions
 	// used for the cipher in this problem
+	"keys/pkg/cipher"
 )
 
 type pair struct {
@@ -32,14 +34,26 @@ func main() {
 
 	// TODO: Implement your attack here
 
+	// ******** EXAMPLE CIPHER USAGE (comment or remove this) ******
 	// Note:  you have access to the encrypt/decrypt algorithm
-	// for the cipher in this problem.  To use:
-	// c := cipher.Encrypt(...)
-	// p := cipher.Decrypt(...)
-	//         or
+	// for the cipher in this problem.
+	// Here's an example encryption/decryption:
+	somePlaintext := [8]byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07}
+	k := uint32(0x00abcdef)
+	c := cipher.Encrypt(k, somePlaintext)
+
+	samePlaintext := cipher.Decrypt(k, c)
+	if somePlaintext != samePlaintext {
+		panic("Something wrong with test example")
+	}
+
+	// The library also provides functions to perform the
+	// "double encryption":
 	// c := cipher.DoubleEncrypt(...)
 	// p := cipher.DoubleDecrypt(...)
 	// see ./pkg/cipher/cipher.go for details.
+
+	// ******** END EXAMPLE ******
 
 	printKeyPair(0, 0)
 }
