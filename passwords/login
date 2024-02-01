@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+# login - Simulate logins to a password database
+
+import os
+import sys
+import json
+import argparse
+
+import support.crypto as crypto  # See support/crypto.py for relevant cryptographic functions
+import pwdb                      # See pwdb.py for useful constants helpers, can put shared code here
+
+
+EXIT_SUCCESS = 0
+EXIT_FAIL = 2
+
+
+def main(input_args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("db_file")
+    parser.add_argument("username")
+    parser.add_argument("password")
+
+    args = parser.parse_args(input_args)
+    json_db = load_json(args.db_file)
+
+    username = args.username
+    method = _get(json_db, "method")
+    user_db = _get(json_db, "users")
+
+    if username not in user_db:
+        raise ValueError("User not found")
+
+    user_info = user_db[username]
+    rv = EXIT_FAIL
+
+    if method == pwdb.METHOD_PLAIN:
+        # For the plain method, the store value is just the password in cleartext!
+        stored_password = user_info["password"]
+        if stored_password == args.password:
+            rv = EXIT_SUCCESS # Return this on successful login
+        else:
+            rv = EXIT_FAIL # Return this on failure
+
+    elif method == pwdb.METHOD_SHA1_NO_SALT:
+        # TODO:  Implement login using the sha1-nosalt method
+        raise NotImplementedError("TODO")
+
+    elif method == pwdb.METHOD_SHA1_SALT4:
+        # TODO:  Implement login using the sha1-salt4 method
+        raise NotImplementedError("TODO")
+
+    else:
+        raise ValueError(f"Unknown method {method}")
+
+    if rv == EXIT_SUCCESS:
+        print("Success!")
+    else:
+        print("Login failure!")
+
+    sys.exit(rv)  # Exit with return value to indicate status
+
+
+################################################################
+### Utility methods below.  You should not need to modify these.
+################################################################
+
+
+def _get(d, k):
+    if k not in d:
+        raise ValueError(f"{k} not found in {d}")
+
+    return d[k]
+
+
+def load_json(json_file):
+    with open(json_file, "r") as json_fd:
+        json_data = json.load(json_fd)
+
+    return json_data
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
+
+

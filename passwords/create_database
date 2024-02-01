@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+# create_database.py
+# Password database generator
+#
+# DO NOT MODIFY THIS FILE--it will be replaced by the autograder.
+#
+
+import sys
+import json
+import string
+import secrets
+import argparse
+
+import support.crypto as crypto
+import support.database_helpers as db
+import pwdb
+
+
+def main(input_args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--method",
+                        choices=pwdb.METHODS,
+                        default=pwdb.METHOD_PLAIN)
+    parser.add_argument("--secrets-file",
+                        type=str, default="")
+    parser.add_argument("--users", type=int,
+                        default=db.NUM_USERS)
+    parser.add_argument("database_file")
+
+    args = parser.parse_args(input_args)
+
+    storage_method = args.method
+
+    db.build_database(storage_method, args.users,
+                   args.database_file, args.secrets_file, write=True)
+
+    print(f"Generating database {args.database_file}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

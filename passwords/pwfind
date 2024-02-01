@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import json
+import string
+import argparse
+import itertools
+
+import support.crypto as crypto  # See support/crypto.py for relevant cryptographic functions
+import pwdb                      # See pwdb.py for useful constants helpers, can put shared code here
+
+PASSWORD_LENGTH = 4
+
+# All characters that can be in a password, as a long string
+PASSWORD_ALPHABET = string.ascii_lowercase + string.digits
+
+
+def main(input_args):
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("db_file")
+    parser.add_argument("output_file")
+
+    args = parser.parse_args(input_args)
+
+    method, users_db = load_db(args.db_file)
+    print(f"Found database with method {method}")
+
+    recovered_pairs: dict[str, str] = {}
+
+    for user, user_info in users_db.items():
+
+        if method == pwdb.METHOD_PLAIN:
+            # For the plain method, the password is in plaintext, so no work is needed!
+            # Just return the password field from the database
+            recovered_password = user_info["password"]
+
+        elif method == pwdb.METHOD_SHA1_NO_SALT:
+            # TODO:  Find the plaintext password, given the hash
+            raise NotImplementedError("TODO")
+
+        elif method == pwdb.METHOD_SHA1_SALT4:
+            # TODO:  Find the plaintext password, given the hash and salt
+            raise NotImplementedError("TODO")
+
+        else:
+            raise ValueError(f"Unsupported method {method}")
+
+        print("Found {} => {}".format(user, recovered_password))
+        recovered_pairs[user] = recovered_password
+
+    # Write the recovered passwords to file
+    with open(args.output_file, "w") as out_fd:
+        for user, pw_plain in recovered_pairs.items():
+            out_fd.write(f"{user} {pw_plain}\n")
+
+
+def load_db(json_file):
+    """
+    Helper function to load from database, you should not need to modify this.
+    """
+    with open(json_file, "r") as json_fd:
+        json_data = json.load(json_fd)
+
+    def _get(d, k):
+        if k not in d:
+            raise ValueError(f"{k} not found in {d}")
+
+        return d[k]
+
+    method = _get(json_data, "method")
+    users_db = _get(json_data, "users")
+
+    return method, users_db
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

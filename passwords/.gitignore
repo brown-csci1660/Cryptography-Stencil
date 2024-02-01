@@ -1,0 +1,8 @@
+*.secrets.txt
+*.db.json
+
+tmp/
+
+__pycache__/
+env/
+.pytest_cache/
