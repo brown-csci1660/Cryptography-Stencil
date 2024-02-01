@@ -7,3 +7,7 @@
 *.o
 **/__pycache__/*
 
+database.enc
+*.db.json
+*.secrets.txt
+
