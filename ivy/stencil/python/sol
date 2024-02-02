@@ -13,11 +13,11 @@ def main(args):
     ivy_path = args[0]
 
     # Idea: we can perform our attack automatically by running
-    # the router binary as a subprocess--this allows us to
+    # the client binary as a subprocess--this allows us to
     # repeatedly send commands and read the output as if we were
     # entering input manually, just much faster.
 
-    # Build a list with the command to run the router
+    # Build a list with the command to run the client
     cmd = [
         ivy_path,
     ]
@@ -49,7 +49,7 @@ def main(args):
     #   ivy_stdout.readline()
 
     # Here's an example of how to use readline() to get the first
-    # line the router prints to stdout
+    # line the client prints to stdout
     first_response = ivy_stdout.readline()
 
     response_string = first_response.strip()

@@ -18,7 +18,7 @@ func checkError(err error, msg string) {
 
 // Helper to build arrays of bytes from hex strings
 // (like those that you type when interacting with the
-// router binary)
+// client binary)
 func hexStringToBytes(s string) []byte {
 	bytes, err := hex.DecodeString(s)
 	checkError(err, "Error decoding hex string to bytes")
@@ -36,7 +36,7 @@ func checkTestKey(key string) {
 
 func main() {
 	// Idea: we can perform our attack automatically by running
-	// the router binary as a subprocess--this allows us to
+	// the client binary as a subprocess--this allows us to
 	// repeatedly send commands and read the output as if we were
 	// entering input manually, just much faster.
 	var ivyProcess *exec.Cmd
@@ -50,21 +50,21 @@ func main() {
 		checkTestKey(testKey)
 		ivyProcess = exec.Command(binPath, testKey)
 	} else {
-		fmt.Printf("%v <path to router binary to attack> [test key]\n", os.Args[0])
+		fmt.Printf("%v <path to client binary to attack> [test key]\n", os.Args[0])
 		os.Exit(1)
 	}
 
-	// Set up a pipe to the router's stdin
+	// Set up a pipe to the client's stdin
 	ivyStdin, err := ivyProcess.StdinPipe()
 	checkError(err, "Could not open stdin")
 	defer ivyStdin.Close()
 
-	// Set up a pipe to the router process' stdout
+	// Set up a pipe to the client process' stdout
 	ivyStdout, err := ivyProcess.StdoutPipe()
 	checkError(err, "Could not open stdout")
 	defer ivyStdout.Close()
 
-	// Set up a pipe to the router process' stderr
+	// Set up a pipe to the client process' stderr
 	ivyStderr, err := ivyProcess.StderrPipe()
 	checkError(err, "Could not open stderr")
 	defer ivyStderr.Close()
@@ -91,7 +91,7 @@ func main() {
 	//
 
 	// Here's an example of how to use ReadString to get the first line
-	// the router prints to stdout
+	// the client prints to stdout
 	firstResponse, err := reader.ReadString('\n') // Read until newline character
 	checkError(err, "Error reading first response")
 
