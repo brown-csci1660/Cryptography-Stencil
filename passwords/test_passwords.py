@@ -12,6 +12,7 @@ import support.login_helpers as login
 this_path = pathlib.Path(os.path.realpath(__file__)).parent
 problem_dir = this_path.resolve()
 
+DB_DIR = pathlib.Path(problem_dir / "db")
 WORK_DIR = pathlib.Path(problem_dir / "tmp")
 
 PWFIND_PATH = problem_dir / "pwfind"
@@ -30,68 +31,81 @@ class PasswordsTest(unittest.TestCase):
         if not WORK_DIR.exists():
             os.mkdir(str(WORK_DIR))
 
-    def test01_plain_login(self):
+    def test_demo_plain_login(self):
         """
         Try to log in using the plain method.  This is a basic setup
         test to prove the test infrastructure is working--it should
         work with no changes to the stencil.
         """
-        db_file, secrets_file = self.make_db(db.METHOD_PLAIN, 5)
+        db_file, secrets_file = self.use_db("demo")
 
         login.check_database(db_file, secrets_file)
 
-    def test02_plain_pwfind(self):
+    def test_demo_plain_pwfind(self):
         """
         Try to find the password using the plain method.  This is a basic setup
         test to prove the test infrastructure is working--it should
         work with no changes to the stencil.
         """
-        db_file, secrets_file = self.make_db(db.METHOD_PLAIN, 5)
+        db_file, secrets_file = self.use_db("demo")
         self.run_check_pwfind(db_file, secrets_file)
 
-    def test03_sha1_nosalt_login(self):
+    def test_part1_sha1_nosalt_login(self):
         """
         Test login using a database created using the sha1-nosalt method
         """
-        db_file, secrets_file = self.make_db(db.METHOD_SHA1_NO_SALT, 5)
+        db_file, secrets_file = self.use_db("part1")
         login.check_database(db_file, secrets_file)
 
-    def test04_sha1_nosalt_pwfind_single(self):
+    def test_part1_sha1_nosalt_pwfind_single(self):
         """
         Find the password on a database with 1 user stored with the sha1-nosalt method
         """
-        db_file, secrets_file = self.make_db(db.METHOD_SHA1_NO_SALT, 1)
+        db_file, secrets_file = self.use_db("part1")
         self.run_check_pwfind(db_file, secrets_file)
 
-    def test05_sha1_nosalt_pwfind_many(self):
+    def test_part2_sha1_nosalt_pwfind_many(self):
         """
-        Find the passwords of 100 users in a database stored with the sha1-nosalt method
+        Find the passwords of 1000 users in a database stored with the sha1-nosalt method
 
         This test should not take substantially longer than test04.
         If you find it is taking an extremely long time, you should
         rethink your strategy.
         """
-        db_file, secrets_file = self.make_db(db.METHOD_SHA1_NO_SALT, 100)
+        db_file, secrets_file = self.use_db("part2")
         self.run_check_pwfind(db_file, secrets_file)
 
-    def test06_sha1_salt4_login(self):
+    def test_part3_sha1_salt4_login(self):
         """
         Test login using a database created using the sha1-salt4 method
         """
-        db_file, secrets_file = self.make_db(db.METHOD_SHA1_SALT4, 5)
+        db_file, secrets_file = self.use_db("part3")
         login.check_database(db_file, secrets_file)
 
-    def test07_sha1_salt4_pwfind(self):
+    def test_part3_sha1_salt4_pwfind(self):
         """
-        Find the password on a database with 1 user stored with the sha1-nosalt method.
+        Find the password on a database with 4 users stored with the sha1-salt4 method.
         This may take a few minutes, depending on the CPU speed of your system.
         """
-        db_file, secrets_file = self.make_db(db.METHOD_SHA1_SALT4, 4)
+        db_file, secrets_file = self.use_db("part3")
         self.run_check_pwfind(db_file, secrets_file)
 
     # ######## Utility methods for tests #########
     def _name(self):
         return self.id().split(".")[-1]
+
+    def use_db(self, key):
+        db_file = DB_DIR / "{}.db.json".format(key)
+        secrets_file = DB_DIR / "{}.secrets.txt".format(key)
+
+        def _check(filename, s):
+            if not filename.exists():
+                raise ValueError(f"Unable to find {s} at {filename.relative_to(problem_dir)}.  Try regenerating your databases.")
+
+        _check(db_file, "database file")
+        _check(secrets_file, "secrets file")
+
+        return db_file, secrets_file
 
     def make_db(self, method, users):
         db_file = WORK_DIR / "{}.db.json".format(self._name())
@@ -100,8 +114,6 @@ class PasswordsTest(unittest.TestCase):
                                         database_file=db_file,
                                         secrets_file=secrets_file,
                                         write=True)
-        _, _ = jd, secrets
-        return db_file, secrets_file
 
     def run_pwfind(self, db_file, output_file):
         cmd = [str(PWFIND_PATH), str(db_file), str(output_file)]
