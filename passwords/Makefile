@@ -18,7 +18,7 @@ check:
 	$(PYTHON) -m unittest test_passwords.py -v
 
 check-setup:
-	$(PYTHON) -m unittest test_passwords.py -vf -k 'test_passwords.PasswordsTest.test_plain*'
+	$(PYTHON) -m unittest test_passwords.py -vf -k 'test_passwords.PasswordsTest.test_demo*'
 
 check-part1:
 	$(PYTHON) -m unittest test_passwords.py -vf -k 'test_passwords.PasswordsTest.test_part1*'
